@@ -21,7 +21,7 @@ module OmniAuth
       option :authorize_options, [:scope]
 
       uid { raw_info['id'] }
-      
+
       info do
         prune!({
           'uid'             => raw_info['user_id'],
@@ -33,11 +33,11 @@ module OmniAuth
           'hub_domain'      => raw_info['hub_domain'],
         })
       end
-      
-      extra do 
+
+      extra do
         { 'user' =>  prune!(raw_info) }
       end
-      
+
       def raw_info
         @raw_info ||= access_token.get("/oauth/v1/access-tokens/#{access_token.token}").parsed
       end
@@ -51,6 +51,9 @@ module OmniAuth
         end
       end
 
+      def callback_url
+        options[:redirect_uri] || (full_host + script_name + callback_path)
+       end
     end
   end
 end
